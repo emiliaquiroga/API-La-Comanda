@@ -11,13 +11,7 @@ require_once '../app/controller/Cocinero.php';
 require_once '../app/controller/Socio.php';
 
 
-class UsuarioController{
-    private $conexion;
-
-    public function __construct($conexion)
-    {
-        $this->conexion = $conexion;
-    }
+class UsuarioController extends Usuario{
 
     public function AsignarUsuario(Request $request, Response $response, $args){
 
@@ -25,19 +19,19 @@ class UsuarioController{
 
         switch($data['tipo_usuario']){
             case 'socio':
-                $usuario = new Socio($this->conexion);
+                $usuario = new Socio();
                 break;
             case 'bartender':
-                $usuario = new Bartender($this->conexion);
+                $usuario = new Bartender();
                 break;
             case 'mozo':
-                $usuario = new Mozo($this->conexion);
+                $usuario = new Mozo();
                 break;
             case 'cocinero':
-                $usuario = new Cocinero($this->conexion);
+                $usuario = new Cocinero();
                 break;
             case 'cervecero':
-                $usuario = new Cervecero($this->conexion);
+                $usuario = new Cervecero();
                 break;
             default:
                 $response->getBody()->write(json_encode(["message"=>"Rol no valido"]));
@@ -46,7 +40,7 @@ class UsuarioController{
         }
         $usuario->usuario = $data['usuario'];
         $usuario->password = $data['password'];
-        $usuario->tipo = $data['tipo_usuario'];
+        $usuario->tipo_usuario = $data['tipo_usuario'];
         $mensaje= $usuario->crearUsuario();
 
         $response->getBody()->write(json_encode(['mensaje' => "Usuario creado exitosamente reinona!"]));

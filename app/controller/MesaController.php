@@ -7,17 +7,12 @@ require_once '../app/controller/Mozo.php';
 require_once '../app/model/Usuario.php';
 
 
-class MesaController{
-    private $conexion;
+class MesaController {
 
-    public function __construct($conexion)
-    {
-        $this->conexion = $conexion;
-    }
 
     public function AbrirMesa(Request $request, Response $response, $args){
         $data = $request->getParsedBody();
-        $mesa = new Mesa($this->conexion);
+        $mesa = new Mesa();
         $mesa->mozo_asignado = $data['mozo_asignado'];
         $mesa->estado = $data['estado'];
 
@@ -55,10 +50,25 @@ class MesaController{
     } */
 
     function listarMesas(Request $request, Response $response, $args){
-        $mesa = new Mesa($this->conexion);
+        $mesa = new Mesa();
         $consulta = $mesa->leerMesas();
         $listaMesas = $consulta->fetchAll(PDO::FETCH_ASSOC);
         $response -> getBody()->write(json_encode($listaMesas));
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+
+    public function modificarEstadoMesa(Request $request, Response $response, array $args) {
+        $parametros = $request->getParsedBody();
+        $id = $parametros['id'];
+        $nuevo_estado = $parametros['estado'];
+
+        $mesa = new Mesa();
+        $mesa->id = $id;
+        $mesa->estado = $nuevo_estado;
+        $mesa->modificarEstadoMesa();
+
+        $payload = json_encode(array("mensaje" => "Estado de la mesa modificado"));
+        $response->getBody()->write($payload);
         return $response->withHeader('Content-Type', 'application/json');
     }
 

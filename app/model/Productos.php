@@ -6,7 +6,7 @@ class Productos{
     public $stock;
     public $precio;
 
-    private $conexion;
+
     private $tabla = 'productos';
 
     public function altaProducto(){
@@ -27,5 +27,6 @@ class Productos{
         $consulta->execute();
         return $consulta;
     }
-}
     
+}
+

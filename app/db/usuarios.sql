@@ -1,0 +1,7 @@
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    tipo_usuario VARCHAR(255) NOT NULL,
+    fecha_alta TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

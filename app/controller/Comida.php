@@ -3,12 +3,6 @@
 require_once '../app/model/Productos.php';
 
 class Comida extends Productos{
-    private $conexion;
-
-    public function __construct($db)
-    {
-        $this->conexion=$db;
-    }
 
     public function AltaComida($request, $response, $arg){
         $parametros = $request->getParsedBody();
@@ -16,7 +10,7 @@ class Comida extends Productos{
         $tipo = $parametros['tipo'];
         $stock = $parametros['stock'];
         $precio = $parametros['precio'];
-        $comida = new Comida($this->conexion);
+        $comida = new Comida();
         $comida->nombreProducto = $nombreProducto;
         $comida->tipo = $tipo; 
         $comida->stock = $stock;

@@ -1,30 +1,32 @@
-
 <?php
 
-class ManipularDatos{
-    private static $objAccesoDatos;
-    public $pdo;
-    
-    private function __construct(){
-        $this->iniciarConexion();
-    }
+class ManipularDatos {
+    private static $instancia;
+    private $pdo;
 
-    private function iniciarConexion(){
+    private function __construct() {
+        // Las variables de entorno se cargan automáticamente desde el archivo .env
+        $conStr = 'mysql:host=' . $_ENV['MYSQL_HOST'] . ';dbname=' . $_ENV['MYSQL_DB'] . ';charset=utf8';
+        $usuario = $_ENV['MYSQL_USER'];
+        $clave = $_ENV['MYSQL_PASS'];
+
         try {
-            $conStr = 'mysql:host=localhost; dbname=la_comarca';
-            $this->pdo = new PDO($conStr, "root", "");
+            $this->pdo = new PDO($conStr, $usuario, $clave);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-            print "Error: " . $e->getMessage();
-            die();
+            die("Error de conexión: " . $e->getMessage());
         }
     }
-    public static function obtenerInstancia()
-    {
-        if (!isset(self::$objAccesoDatos)) {
-            self::$objAccesoDatos = new ManipularDatos();
+
+    public static function obtenerInstancia() {
+        if (self::$instancia === null) {
+            self::$instancia = new ManipularDatos();
         }
-        return self::$objAccesoDatos;
+        return self::$instancia;
+    }
+
+    public function obtenerConexion() {
+        return $this->pdo;
     }
 
     public function prepararConsulta($sql)
@@ -36,8 +38,5 @@ class ManipularDatos{
         return $this->pdo->lastInsertId();
     }
 
-    public function obtenerConexion(){
-        return $this->pdo;
-    }
-}
 
+}

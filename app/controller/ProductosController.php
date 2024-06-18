@@ -6,23 +6,18 @@ require_once '../app/model/Productos.php';
 require_once 'Bebida.php';
 require_once 'Comida.php';
 
-class ProductosController{
-    private $conexion;
+class ProductosController extends Productos{
 
-    public function __construct($conexion)
-    {
-        $this->conexion = $conexion;
-    }
     public function AsignarProducto(Request $request, Response $response, $args){
 
         $data = $request->getParsedBody();
 
         switch($data['tipo']){
             case 'comida':
-                $producto = new Comida($this->conexion);
+                $producto = new Comida();
                 break;
             case 'bebida':
-                $producto = new Bebida($this->conexion);
+                $producto = new Bebida();
                 break;
             
             default:
