@@ -1,0 +1,24 @@
+
+id,nombre_producto,tio_producto,stock,precio
+1,"milanesa con pure",comida,40,5000
+2,pizza,comida,30,8000
+3,spaguetti,comida,10,6000
+4,salmon,comida,20,10000
+5,gaseosa,bebida,10,2500
+6,daikiri,bebida,10,4500
+7,"aperol spritz",bebida,10,6000
+8,cerveza,bebida,50,4000
+9,nombre_producto,tipo_producto,0,0
+10,sprite,bebida,50,2500
+11,"botella de agua",bebida,50,1500
+12,"cerveza corona",bebida,50,2500
+13,daikiri,bebida,50,2500
+14,"hamburguesa de garbanzo",comida,10,7000
+15,"hamburguesa de carne",comida,10,8000
+16,nombre_producto,tipo_producto,0,0
+17,sprite,bebida,50,2500
+18,"botella de agua",bebida,50,1500
+19,"cerveza corona",bebida,50,2500
+20,daikiri,bebida,50,2500
+21,"hamburguesa de garbanzo",comida,10,7000
+22,"hamburguesa de carne",comida,10,8000

@@ -113,3 +113,11 @@ class Pedidos {
         $consulta->execute();
     }
 }
+
+
+/*
+middleware que se encargue de guardar las acciones:
+QUIEN lo esta haciendo
+CUANDO lo esta haciendo 
+los datos del pedido
+*/

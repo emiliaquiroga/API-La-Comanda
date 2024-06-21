@@ -92,5 +92,15 @@ $app->put('/ModificarDetallePedido', function (Request $request, Response $respo
     return $controlador->modificarDetallePedido($request, $response, $args);
 })->add(new MiddlewareEstadoDetallePedido());
 
+$app->post('/CargarProductosCSV', function(Request $request, Response $response, array $args){
+    $controlador = new ProductosController();
+    return $controlador->cargarArchivosCSV($request, $response, $args);
+}); 
+
+$app->get('/ExportarProductosCSV', function(Request $request, Response $response, array $args){
+    $controlador = new ProductosController();
+    return $controlador->exportarArchivosCSV($request, $response, $args);
+});
+
 
 $app->run();

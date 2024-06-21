@@ -1,0 +1,8 @@
+
+nombre_producto,tipo_producto,stock,precio
+sprite,bebida,50,2500
+botella de agua,bebida,50,1500
+cerveza corona,bebida,50,2500
+daikiri,bebida,50,2500
+hamburguesa de garbanzo,comida,10,7000
+hamburguesa de carne,comida,10,8000

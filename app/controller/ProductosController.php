@@ -6,7 +6,7 @@ require_once '../app/model/Productos.php';
 require_once 'Bebida.php';
 require_once 'Comida.php';
 
-class ProductosController extends Productos{
+class ProductosController {
 
     public function AsignarProducto(Request $request, Response $response, $args){
 
@@ -35,7 +35,7 @@ class ProductosController extends Productos{
         return $response->withHeader('Content-Type', 'application/json');
     }
 
-    function listarProducto(Request $request, Response $response, $args){
+    public function listarProducto(Request $request, Response $response, $args){
         $producto = new Productos();
         $consulta = $producto->leerProductos();
         $listaProductos = $consulta->fetchAll(PDO::FETCH_ASSOC);
@@ -43,5 +43,45 @@ class ProductosController extends Productos{
         return $response->withHeader('Content-Type', 'application/json');
     }
 
+    public function cargarArchivosCSV(Request $request, Response $response, $args){
+        //$parametros = $request->getUploadedFiles();
+        //var_dump($parametros);
+        $archivo = $_FILES['archivo']['tmp_name'];
+        //$archivo = $parametros['archivo']['tmp_name'];
 
-}
+        if (!isset($archivo)) {
+            $response->getBody()->write("Error al recibir por parametro.");
+            return $response->withHeader('Content-Type', 'text/plain')->withStatus(400);
+        }
+
+        $fh = fopen($archivo, "r");
+        if ($fh === false) {
+            exit("Error al abrir el archivo CSV.");
+        }
+        try {
+            $productos = new Productos();
+            $productos->cargarArchivosCSV($archivo);
+            echo "Proceso de carga de CSV terminado.";            
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+        fclose($fh);
+        echo "se cerro el archivo";
+    } 
+    public function exportarArchivosCSV(Request $request, Response $response, $args) {
+        try {
+            $productos = new Productos();
+            $csv = $productos->exportarArchivoCSV();
+
+            $response->getBody()->write($csv);
+            return $response
+                ->withHeader('Content-Type', 'text/csv')
+                ->withHeader('Content-Disposition', 'attachment; filename="exportacion.csv"')
+                ->withStatus(200);
+        } catch (Exception $e) {
+            $response->getBody()->write("Error: " . $e->getMessage());
+            return $response->withHeader('Content-Type', 'text/plain')->withStatus(500);
+        }
+    }
+} 
+
