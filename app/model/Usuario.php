@@ -10,10 +10,10 @@ class Usuario{
 
     public function crearUsuario(){
         $objAccesoDatos = ManipularDatos::obtenerInstancia();
+        $claveHash = password_hash($this->password, PASSWORD_DEFAULT);
         $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO usuarios (usuario, password, tipo_usuario) VALUES (:usuario, :password, :tipo_usuario)");
-        //$claveHash = password_hash($this->password, PASSWORD_DEFAULT);
         $consulta->bindValue(':usuario', $this->usuario, PDO::PARAM_STR);
-        $consulta->bindValue(':password', $this->password, PDO::PARAM_STR); 
+        $consulta->bindValue(':password', $claveHash, PDO::PARAM_STR); 
         $consulta->bindValue(':tipo_usuario', $this->tipo_usuario, PDO::PARAM_STR); 
         $consulta->execute();
 

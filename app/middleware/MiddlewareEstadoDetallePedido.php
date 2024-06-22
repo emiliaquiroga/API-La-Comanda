@@ -103,12 +103,3 @@ class MiddlewareEstadoDetallePedido{
             return $producto['nombre_producto'];
         }
 }
-
-/*
-Tengo que: 
-chequear en la tabla detalle el TIPO del producto, no ingresarlo manualmente
-TAMBIEN poner el usuario del empleado, que chequee en la tabla empleado el TIPO de empleado que es, y a partir de ahi dejarlo
-Por ejemplo: si usuario es agustina, y agustina es bardenter, chequear si puede modificar el tipo del producto. 
-TENGO que manejar el tema de la cerveza, no se si conviene hacerlo consultando la tabla producto en la columna no,bre producto.
-
-*/

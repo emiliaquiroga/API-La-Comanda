@@ -84,10 +84,6 @@ class Productos{
 
 
 /*
-Cuanod hago el send and download, tiene que llegar y descargarse. En la response, devolver el csv,
-poner en header que el tipo de rta es csv, y cuando demos el send and download, se descarga automáticamente. !!!!!
-
-hashear contraseñas
 
 MANEJAR REPETICIONES:
 NO SE PUEDE REPETIR EL MISMO PRODUCTO, debería aumentar el stock solamente.
