@@ -7,26 +7,30 @@ require_once '../app/utils/AutentificadorJWT.php';
 
 class MiddlewareAutenticacion
 {
-
     public function __invoke(Request $request, RequestHandler $handler): Response
     {   
-        $response = $handler->handle($request);
         $header = $request->getHeaderLine('Authorization');
-        $token = trim(explode("Bearer", $header)[1]);
+        $token = trim(str_replace("Bearer", "", $header));
+
+        $response = new Response();
 
         try {
             $payload = AutentificadorJWT::ObtenerPayLoad($token);
             $usuario = $payload->data->usuario;
+            $tipo_usuario = $payload->data->tipo_usuario;
 
             $objAccesoDatos = ManipularDatos::obtenerInstancia();
-            $stmt = $objAccesoDatos->prepararConsulta("SELECT * FROM usuarios WHERE usuario = :usuario");
-            $stmt->bindValue(':usuario', $usuario, PDO::PARAM_STR);
-            $stmt->execute();
-            $user = $stmt->fetch();
+            $consulta = $objAccesoDatos->prepararConsulta("SELECT * FROM usuarios WHERE usuario = :usuario");
+            $consulta->bindValue(':usuario', $usuario, PDO::PARAM_STR);
+            $consulta->execute();
+            $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
 
-            if (!$user) {
+            if (!$resultado) {
                 throw new Exception("Usuario no encontrado en la base de datos");
             }
+
+            $request = $request->withAttribute('usuario_modificante', $usuario);
+            $request = $request->withAttribute('tipo_usuario', $tipo_usuario);
             $response = $handler->handle($request);
         } catch (Exception $e) {
             $payload = json_encode(array('mensaje' => 'ERROR: Hubo un error con el TOKEN'));

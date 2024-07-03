@@ -37,6 +37,7 @@ class ComposerStaticInit28838f646466ea3e00177d9b924f76d4
         ),
         'F' => 
         array (
+            'Fpdf\\' => 5,
             'Firebase\\JWT\\' => 13,
             'Fig\\Http\\Message\\' => 17,
             'FastRoute\\' => 10,
@@ -93,6 +94,10 @@ class ComposerStaticInit28838f646466ea3e00177d9b924f76d4
         'GrahamCampbell\\ResultType\\' => 
         array (
             0 => __DIR__ . '/..' . '/graham-campbell/result-type/src',
+        ),
+        'Fpdf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fpdf/fpdf/src/Fpdf',
         ),
         'Firebase\\JWT\\' => 
         array (

@@ -2,36 +2,26 @@
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
+
 require_once '../app/model/Productos.php';
-require_once 'Bebida.php';
-require_once 'Comida.php';
+
+
+use Fpdf\Fpdf;
 
 class ProductosController {
 
     public function AsignarProducto(Request $request, Response $response, $args){
 
         $data = $request->getParsedBody();
+        $producto = new Productos();
 
-        switch($data['tipo']){
-            case 'comida':
-                $producto = new Comida();
-                break;
-            case 'bebida':
-                $producto = new Bebida();
-                break;
-            
-            default:
-                $response->getBody()->write(json_encode(["message"=>"Producto no valido"]));
-                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
-        
-        }
-        $producto->nombreProducto = $data['nombreProducto'];
-        $producto->tipo = $data['tipo'];
+        $producto->nombre_producto = $data['nombre_producto'];
+        $producto->sector = $data['sector'];
         $producto->stock = $data['stock'];
         $producto->precio = $data['precio'];
         $mensaje= $producto->altaProducto();
 
-        $response->getBody()->write(json_encode(['mensaje' => "Producto creado exitosamente reinona!"]));
+        $response->getBody()->write(json_encode(['mensaje' => "Producto creado exitosamente!"]));
         return $response->withHeader('Content-Type', 'application/json');
     }
 
@@ -43,9 +33,19 @@ class ProductosController {
         return $response->withHeader('Content-Type', 'application/json');
     }
 
+    public function listarPorSector(Request $request, Response $response, $args){
+        $data = $request->getParsedBody();
+        $tipo_producto = $data['tipo'];
+    
+        $producto = new Productos();
+        $consulta = $producto->leerPorSector($tipo_producto);
+        $listaProductos = $consulta->fetchAll(PDO::FETCH_ASSOC);
+    
+        $response->getBody()->write(json_encode($listaProductos));
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+    
     public function cargarArchivosCSV(Request $request, Response $response, $args){
-        //$parametros = $request->getUploadedFiles();
-        //var_dump($parametros);
         $archivo = $_FILES['archivo']['tmp_name'];
         //$archivo = $parametros['archivo']['tmp_name'];
 
@@ -83,5 +83,38 @@ class ProductosController {
             return $response->withHeader('Content-Type', 'text/plain')->withStatus(500);
         }
     }
+
+
+    public function exportarArchivosPDF(Request $request, Response $response, $args) {
+        try {
+            $productos = new Productos();
+            $listaProductos = $productos->leerProductos()->fetchAll(PDO::FETCH_ASSOC);
+            $pdf = new Fpdf();
+            $pdf->AddPage();
+            $pdf->SetFont('Arial', 'B', 14);
+
+            // columnas
+            $pdf->Cell(40, 10, 'Nombre Producto', 1);
+            $pdf->Cell(30, 10, 'Sector', 1);
+            $pdf->Cell(20, 10, 'Stock', 1);
+            $pdf->Cell(30, 10, 'Precio', 1);
+            $pdf->Ln();
+            foreach ($listaProductos as $producto) {
+                $pdf->Cell(40, 10, $producto['nombre_producto'], 1);
+                $pdf->Cell(30, 10, $producto['sector'], 1);
+                $pdf->Cell(20, 10, $producto['stock'], 1);
+                $pdf->Cell(30, 10, $producto['precio'], 1);
+                $pdf->Ln();
+            }
+            $response->getBody()->write($pdf->Output('S'));
+            return $response
+                ->withHeader('Content-Type', 'application/pdf')
+                ->withHeader('Content-Disposition', 'attachment; filename="productos.pdf"')
+                ->withStatus(200);
+        } catch (Exception $e) {
+            $response->getBody()->write("Error: " . $e->getMessage());
+            return $response->withHeader('Content-Type', 'text/plain')->withStatus(500);
+        }
+    } 
 } 
 

@@ -2,31 +2,71 @@
 
 class Productos{
     public $nombre_producto;
-    public $tipo;
+    public $sector;
     public $stock;
     public $precio;
 
-
+    public static $sectoresValidos = ['cocina', 'tragosVinos', 'cerveza', 'candybar']; 
     private $tabla = 'productos';
 
     public function altaProducto(){
+        if(!in_array($this->sector, self::$sectoresValidos)){throw new Exception('Sector no válido.');}
         $objAccesoDatos = ManipularDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO productos (nombre_producto, tipo, stock, precio) VALUES (:nombre_producto, :tipo_producto, :stock, :precio)");
-        $consulta->bindValue(':nombreProducto', $this->nombre_producto, PDO::PARAM_STR);
-        $consulta->bindValue(':tipo_producto', $this->tipo, PDO::PARAM_STR); 
-        $consulta->bindValue(':stock', $this->stock, PDO::PARAM_STR); 
-        $consulta->bindValue(':precio', $this->precio, PDO::PARAM_STR); 
+        $existe = $this->verificarRepeticion($objAccesoDatos);
+
+        if($existe){
+            $consulta = $objAccesoDatos->prepararConsulta("UPDATE productos SET precio = :precio, stock = stock + :stock WHERE nombre_producto = :nombre_producto AND sector = :sector");
+            $consulta->bindValue(':nombre_producto', $this->nombre_producto, PDO::PARAM_STR);
+            $consulta->bindValue(':sector', $this->sector, PDO::PARAM_STR); 
+            $consulta->bindValue(':stock', $this->stock, PDO::PARAM_STR); 
+            $consulta->bindValue(':precio', $this->precio, PDO::PARAM_STR); 
+        }else{
+            $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO productos (nombre_producto, sector, stock, precio) VALUES (:nombre_producto, :sector, :stock, :precio)");
+            $consulta->bindValue(':nombre_producto', $this->nombre_producto, PDO::PARAM_STR);
+            $consulta->bindValue(':sector', $this->sector, PDO::PARAM_STR); 
+            $consulta->bindValue(':stock', $this->stock, PDO::PARAM_STR); 
+            $consulta->bindValue(':precio', $this->precio, PDO::PARAM_STR); 
+        }
         $consulta->execute();
 
         return $objAccesoDatos->obtenerUltimoId();
     }
+
+    private function verificarRepeticion($objAccesoDatos){
+        $query = "SELECT * FROM productos WHERE nombre_producto = :nombre_producto AND sector = :sector";
+        $consulta = $objAccesoDatos->prepararConsulta($query);
+        $consulta->bindValue(':nombre_producto', $this->nombre_producto, PDO::PARAM_STR);
+        $consulta->bindValue(':sector', $this->sector, PDO::PARAM_STR);
+        $consulta->execute();
+
+        return $consulta->rowCount() > 0;
+    }
+
+    public static function descontarStock($cantidad, $id_producto){
+        $objAccesoDatos = ManipularDatos::obtenerInstancia();
+        $query = "UPDATE productos SET stock = stock - :cantidad WHERE id = :id";
+        $consulta = $objAccesoDatos->prepararConsulta($query);
+        $consulta->bindvalue(':cantidad', $cantidad, PDO::PARAM_INT);
+        $consulta->bindvalue(':id', $id_producto, PDO::PARAM_STR);
+        $consulta->execute();
+    }
+
     public function leerProductos(){
         $objAccesoDatos = ManipularDatos::obtenerInstancia();
-        $query = "SELECT id, nombre_producto, tipo_producto, stock, precio FROM " .$this->tabla;
+        $query = "SELECT id, nombre_producto, sector, stock, precio FROM " .$this->tabla;
         $consulta = $objAccesoDatos->prepararConsulta($query);
         $consulta->execute();
         return $consulta;
     }
+    public function leerPorSector($sector){
+        $objAccesoDatos = ManipularDatos::obtenerInstancia();
+        $query = "SELECT dp.id, p.nombre_producto, p.sector, p.stock, p.precio FROM detalle_pedido dp JOIN productos p ON dp.id_producto = p.id WHERE p.sector = :sector";
+        $consulta = $objAccesoDatos->prepararConsulta($query);
+        $consulta->bindValue(':sector', $sector, PDO::PARAM_STR);
+        $consulta->execute();
+        return $consulta;
+    }
+
 
     public function cargarArchivosCSV($archivo){
         $objAccesoDatos = ManipularDatos::obtenerInstancia();
@@ -34,26 +74,31 @@ class Productos{
         if($fh === false){
             throw new Exception("Error al abrir CSV.");
         }
-
+        $header = fgetcsv($fh, 1000, ","); // Leer la primera fila como encabezado
+        if ($header === false || count($header) < 4) {
+            throw new Exception("El archivo CSV tiene un encabezado inválido.");
+        }
+    
         while(($row = fgetcsv($fh, 1000, ","))!== false){
+            // Verificar que la fila tenga al menos 4 elementos
+            if (count($row) < 4) {
+                echo "Fila incompleta, se omitirá: " . implode(",", $row) . "\n";
+                continue;
+            }
             try{
-                $nombre_producto = $row[0];
-                $tipo_producto = $row[1];
-                $stock = $row[2];
-                $precio = $row[3];
-                $query = "INSERT INTO ".$this->tabla."(nombre_producto, tipo_producto, stock, precio) VALUES (:nombre_producto, :tipo_producto, :stock, :precio)";
-                $consulta = $objAccesoDatos->prepararConsulta($query);
-                $consulta->bindParam(':nombre_producto', $nombre_producto);
-                $consulta->bindParam(':tipo_producto', $tipo_producto);
-                $consulta->bindParam(':stock', $stock);
-                $consulta->bindParam(':precio', $precio);
-                $consulta->execute();
+                $producto = new Productos();
+                $producto->nombre_producto= $row[0];
+                $producto->sector= $row[1];
+                $producto->stock = $row[2];
+                $producto->precio = $row[3];
+                $producto->altaProducto();
+                echo "Se cargo el archivo correctamente";
             }catch(Exception $e){
                 throw $e;
             }
         }
         fclose($fh);
-        echo "Terminó ";
+        
     } 
 
     public function exportarArchivoCSV(){
@@ -64,7 +109,7 @@ class Productos{
             throw new Exception("Error al crear archivo CSV.");
         }
         
-        fputcsv($fh, ['id', 'nombre_producto', 'tio_producto', 'stock', 'precio']);
+        fputcsv($fh, ['id', 'nombre_producto', 'sector', 'stock', 'precio']);
         $productos = new Productos();
         $consulta = $productos->leerProductos();
         $listaProductos = $consulta->fetchAll(PDO::FETCH_ASSOC);

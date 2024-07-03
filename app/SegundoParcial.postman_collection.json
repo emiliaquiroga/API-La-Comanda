@@ -1,0 +1,399 @@
+{
+	"info": {
+		"_postman_id": "b9fc4a22-3b7f-49dd-a7b9-1eb0764914b9",
+		"name": "SegundoParcial",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34176595"
+	},
+	"item": [
+		{
+			"name": "POST",
+			"item": [
+				{
+					"name": "http://localhost:666/tienda/alta",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "marca",
+									"value": "exxon",
+									"type": "text"
+								},
+								{
+									"key": "precio",
+									"value": "700",
+									"type": "text"
+								},
+								{
+									"key": "tipo",
+									"value": "cartucho",
+									"type": "text"
+								},
+								{
+									"key": "modelo",
+									"value": "mimodelo",
+									"type": "text"
+								},
+								{
+									"key": "color",
+									"value": "blanco",
+									"type": "text"
+								},
+								{
+									"key": "stock",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "imagen",
+									"type": "file",
+									"src": "/C:/xampp/htdocs/PROGRA 3/PrimerParcial/ImagenesDeProductos/2024/superimpresora_Cartucho.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/tienda/alta",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"tienda",
+								"alta"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:666/tienda/consultar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "marca",
+									"value": "hp",
+									"type": "text"
+								},
+								{
+									"key": "tipo",
+									"value": "impresora",
+									"type": "text"
+								},
+								{
+									"key": "color",
+									"value": "negro",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/tienda/consultar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"tienda",
+								"consultar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:666/ventas/alta",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email_usuario",
+									"value": "carlitos@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "marca",
+									"value": "lenovo",
+									"type": "text"
+								},
+								{
+									"key": "tipo",
+									"value": "cartucho",
+									"type": "text"
+								},
+								{
+									"key": "modelo",
+									"value": "thinkpad",
+									"type": "text"
+								},
+								{
+									"key": "cantidad",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "imagen",
+									"type": "file",
+									"src": "/C:/Users/mimit/Pictures/New king in the arco.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/venta/alta",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"venta",
+								"alta"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET",
+			"item": [
+				{
+					"name": "/venta/consultar/productos/porProducto",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/venta/consultar/productos/porProducto?tipo=impresora",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"venta",
+								"consultar",
+								"productos",
+								"porProducto"
+							],
+							"query": [
+								{
+									"key": "tipo",
+									"value": "impresora"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/venta/consultar/ventas/porUsuario",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://localhost:666/venta/consultar/ventas/porUsuario?email_usuario=pedrito",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"venta",
+								"consultar",
+								"ventas",
+								"porUsuario"
+							],
+							"query": [
+								{
+									"key": "email_usuario",
+									"value": "pedrito"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/venta/consultar/productos/vendidos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/venta/consultar/productos/vendidos?fecha=2024-06-25",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"venta",
+								"consultar",
+								"productos",
+								"vendidos"
+							],
+							"query": [
+								{
+									"key": "fecha",
+									"value": "2024-06-25"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/venta/consultar/productos/entreValores",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/venta/consultar/productos/entreValores?min=4000&max=100000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"venta",
+								"consultar",
+								"productos",
+								"entreValores"
+							],
+							"query": [
+								{
+									"key": "min",
+									"value": "4000"
+								},
+								{
+									"key": "max",
+									"value": "100000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/venta/consultar/ventas/ingresos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/venta/consultar/ventas/ingresos?fecha=",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"venta",
+								"consultar",
+								"ventas",
+								"ingresos"
+							],
+							"query": [
+								{
+									"key": "fecha",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "put",
+			"item": [
+				{
+					"name": "venta/modificar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email_usuario",
+									"value": "emilia@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "marca",
+									"value": "hp",
+									"type": "text"
+								},
+								{
+									"key": "tipo",
+									"value": "impresora",
+									"type": "text"
+								},
+								{
+									"key": "modelo",
+									"value": "xpsuper400",
+									"type": "text"
+								},
+								{
+									"key": "cantidad",
+									"value": "9",
+									"type": "text"
+								},
+								{
+									"key": "numero_pedido",
+									"value": "9001",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/venta/modificar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"venta",
+								"modificar"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

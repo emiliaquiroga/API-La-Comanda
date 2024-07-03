@@ -6,6 +6,7 @@ CREATE TABLE pedidos (
     nombre_cliente TEXT,
     contenido TEXT,
     estado TEXT DEFAULT 'esperando preparacion',
+    costo_total INT NOT NULL,
     tiempo_estimado TEXT DEFAULT 'esperando preparacion',
     fecha_pedido TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -1,8 +1,19 @@
-
-nombre_producto,tipo_producto,stock,precio
-sprite,bebida,50,2500
-botella de agua,bebida,50,1500
-cerveza corona,bebida,50,2500
-daikiri,bebida,50,2500
-hamburguesa de garbanzo,comida,10,7000
-hamburguesa de carne,comida,10,8000
+nombre_producto,sector,stock,precio
+milanesa con pure,cocina,40,5000
+pizza,cocina,30,8000
+spaguetti,cocina,10,6000
+salmon,cocina,20,10000
+gaseosa,tragosVinos,10,2500
+daikiri,tragosVinos,10,4500
+aperol spritz,tragosVinos,10,6000
+heineken,cerveza,50,4000
+sprite,tragosVinos,50,2500
+botella de agua,tragosVinos,50,1500
+corona,cerveza,50,2500
+daikiri,tragosVinos,50,2500
+hamburguesa de garbanzo,cocina,10,7000
+hamburguesa de carne,cocina,10,8000
+helado de frutilla,candybar,5,8000
+cinnamon roll,candybar,10,8000
+curry,cocina,40,15000
+empanadas de osobuco,cocina,24,3000

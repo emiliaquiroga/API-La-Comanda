@@ -4,46 +4,19 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 require_once '../app/model/Usuario.php';
-require_once '../app/controller/Bartender.php';
-require_once '../app/controller/Cervecero.php';
-require_once '../app/controller/Mozo.php';
-require_once '../app/controller/Cocinero.php';
-require_once '../app/controller/Socio.php';
+
 
 
 class UsuarioController extends Usuario{
 
     public function AsignarUsuario(Request $request, Response $response, $args){
-
         $data = $request->getParsedBody();
-
-        switch($data['tipo_usuario']){
-            case 'socio':
-                $usuario = new Socio();
-                break;
-            case 'bartender':
-                $usuario = new Bartender();
-                break;
-            case 'mozo':
-                $usuario = new Mozo();
-                break;
-            case 'cocinero':
-                $usuario = new Cocinero();
-                break;
-            case 'cervecero':
-                $usuario = new Cervecero();
-                break;
-            default:
-                $response->getBody()->write(json_encode(["message"=>"Rol no valido"]));
-                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
-        
-        }
+        $usuario = new Usuario();
         $usuario->usuario = $data['usuario'];
         $usuario->password = $data['password'];
         $usuario->tipo_usuario = $data['tipo_usuario'];
         $mensaje= $usuario->crearUsuario();
-
-        $response->getBody()->write(json_encode(['mensaje' => "Usuario creado exitosamente reinona!"]));
+        $response->getBody()->write(json_encode(['mensaje' => "Usuario creado exitosamente!"]));
         return $response->withHeader('Content-Type', 'application/json');
     }
 
@@ -52,6 +25,40 @@ class UsuarioController extends Usuario{
         $consulta = $usuario->leerUsuarios();
         $listaUsuarios = $consulta->fetchAll(PDO::FETCH_ASSOC);
         $response -> getBody()->write(json_encode($listaUsuarios));
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+
+    public function BorrarUno(Request $request, Response $response, $args) {
+        $parametros = $request->getParsedBody();
+        if (!isset($parametros['id_usuario'])) {
+            $payload = json_encode(array("error" => "id_usuario no proporcionado"));
+            $response->getBody()->write($payload);
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
+        $id_usuario = $parametros['id_usuario'];
+        Usuario::borrarUsuario($id_usuario);
+
+        $payload = json_encode(array("mensaje" => "Usuario borrado con éxito"));
+
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+
+    public function ModificarUno(Request $request, Response $response, $args) {
+        $parametros = $request->getParsedBody();
+
+        if (!isset($parametros['id_usuario'])) {
+            $payload = json_encode(array("error" => "id_usuario no proporcionado"));
+            $response->getBody()->write($payload);
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
+        $usuario = new Usuario();
+        $usuario->usuario = $parametros['usuario'];
+        $usuario->tipo_usuario = $parametros['tipo_usuario'];
+        $usuario->modificarDatos();
+        $payload = json_encode(array("mensaje" => "Usuario modificado con éxito"));
+
+        $response->getBody()->write($payload);
         return $response->withHeader('Content-Type', 'application/json');
     }
 }

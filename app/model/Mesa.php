@@ -5,17 +5,21 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 class Mesa{
 
-    public $mozo_asignado; // chequear que el mozo exista en la db.
+    public $codigo_mesa; // chequear que el mozo exista en la db.
     public $estado;
     public $id; 
 
+    public static $estadosValidos = ['abierta', 'cerrada', 'con cliente esperando pedido', 'con cliente comiendo', 'con cliente pagando'];
     private $tabla = 'mesas';
 
     public function altaMesa(){
+        if(!in_array($this->estado, self::$estadosValidos)){
+            throw new Exception('Estado de mesa no valido.');
+        }
         $objAccesoDatos = ManipularDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO mesas (mozo_asignado, estado) VALUES (:mozo_asignado, :estado)");
+        $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO mesas (codigo_mesa, estado) VALUES (:codigo_mesa, :estado)");
         //$claveHash = password_hash($this->password, PASSWORD_DEFAULT);
-        $consulta->bindValue(':mozo_asignado', $this->mozo_asignado, PDO::PARAM_STR); 
+        $consulta->bindValue(':codigo_mesa', $this->codigo_mesa, PDO::PARAM_STR); 
         $consulta->bindValue(':estado', $this->estado, PDO::PARAM_STR); 
         $consulta->execute();
         return $objAccesoDatos->obtenerUltimoId();
@@ -23,7 +27,7 @@ class Mesa{
 
     public function leerMesas(){
         $objAccesoDatos = ManipularDatos::obtenerInstancia();
-        $query = "SELECT id, mozo_asignado , estado FROM " .$this->tabla;
+        $query = "SELECT id, codigo_mesa , estado FROM " .$this->tabla;
         $consulta = $objAccesoDatos->prepararConsulta($query);
         $consulta->execute();
         return $consulta;
@@ -36,4 +40,6 @@ class Mesa{
         $consulta->bindValue(':id', $this->id, PDO::PARAM_INT);
         $consulta->execute();
     }
+
+
 }
