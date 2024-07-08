@@ -1,9 +1,10 @@
-LA COMANDA 🍽 Aplicación Slim Framework 4 PHP + MySQL 🚀
+LA COMANDA 🍽 Aplicación Slim Framework 4 PHP + MySQL + JWT 🚀
 ==================================================
 
 ## Descripción del Proyecto 🎯
 
-Esta API está diseñada para gestionar las operaciones diarias de un restaurante con cuatro sectores bien diferenciados: barra de tragos y vinos, barra de cervezas artesanales, cocina, y candy bar. La aplicación maneja la rotación de empleados, el seguimiento de pedidos, la gestión de estados de mesas y la recopilación de encuestas de satisfacción de los clientes.
+API diseñada para gestionar las operaciones diarias de un restaurante con cuatro sectores bien diferenciados: barra de tragos y vinos, barra de cervezas artesanales, cocina, y candy bar. La aplicación maneja la rotación de empleados, el seguimiento de pedidos, la gestión de estados de mesas y la recopilación de encuestas de satisfacción de los clientes. 
+Además, utiliza JSON Web Tokens (JWT) para autenticar y autorizar a los usuarios en la realización de acciones específicas dentro de la plataforma 🔐.
 
 ## Requerimientos de la Aplicación 📋
 
