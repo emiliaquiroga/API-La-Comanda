@@ -46,7 +46,7 @@ class EncuestaController {
 
     public static function TraerMejoresComentarios($request, $response, $args)
     {
-        $lista = Encuesta::obtenerMejorPuntuacionMesa();
+        $lista = Encuesta::obtenerMejorComentariosMesa();
         $payload = json_encode(array("listaMesa" => $lista));
 
         $response->getBody()->write($payload);
@@ -56,7 +56,7 @@ class EncuestaController {
 
     public static function TraerPeoresComentarios($request, $response, $args)
     {
-        $lista = Encuesta::obtenerPeorPuntuacionMesa();
+        $lista = Encuesta::obtenerPeorComentariosMesa();
         $payload = json_encode(array("listaMesa" => $lista));
 
         $response->getBody()->write($payload);

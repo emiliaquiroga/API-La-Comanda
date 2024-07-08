@@ -50,19 +50,30 @@ class Encuesta{
         }
     }
 
-    public static function obtenerMejorPuntuacionMesa()
+    public static function obtenerMejorComentariosMesa()
     {
         $objAccesoDatos = ManipularDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("SELECT * FROM encuestas ORDER BY puntuacion_mesa DESC LIMIT 10");
+        $consulta = $objAccesoDatos->prepararConsulta("
+            SELECT codigo_mesa, AVG((puntuacion_mesa + puntuacion_mozo + puntuacion_comida + puntuacion_restaurante) / 4) AS promedio_puntuacion 
+            FROM encuestas 
+            GROUP BY codigo_mesa 
+            ORDER BY promedio_puntuacion DESC 
+            LIMIT 1");
         $consulta->execute();
-        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Encuesta');
+        return $consulta->fetch(PDO::FETCH_ASSOC);
     }
-
-    public static function obtenerPeorPuntuacionMesa()
+    
+    public static function obtenerPeorComentariosMesa()
     {
         $objAccesoDatos = ManipularDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("SELECT * FROM encuestas ORDER BY puntuacion_mesa ASC LIMIT 10");
+        $consulta = $objAccesoDatos->prepararConsulta("
+            SELECT codigo_mesa, AVG((puntuacion_mesa + puntuacion_mozo + puntuacion_comida + puntuacion_restaurante) / 4) AS promedio_puntuacion 
+            FROM encuestas 
+            GROUP BY codigo_mesa 
+            ORDER BY promedio_puntuacion ASC 
+            LIMIT 1");
         $consulta->execute();
-        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Encuesta');
+        return $consulta->fetch(PDO::FETCH_ASSOC);
     }
+    
 }

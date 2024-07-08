@@ -49,12 +49,11 @@ class Pedidos {
     }
 
     private function nuevoPedido($objAccesoDatos){
-        if ($this->id_mesa && $this->nombre_cliente && $this->contenido) {
-            $consulta = $objAccesoDatos->prepararConsulta( "INSERT INTO pedidos (id_mesa, cod_pedido, nombre_cliente, contenido, estado, foto) VALUES (:id_mesa, :cod_pedido, :nombre_cliente, :contenido, :estado, :foto)");
+        if ($this->id_mesa && $this->nombre_cliente) {
+            $consulta = $objAccesoDatos->prepararConsulta( "INSERT INTO pedidos (id_mesa, cod_pedido, nombre_cliente, estado, foto) VALUES (:id_mesa, :cod_pedido, :nombre_cliente, :estado, :foto)");
             $consulta->bindValue(':id_mesa', $this->id_mesa, PDO::PARAM_INT); 
             $consulta->bindValue(':cod_pedido', $this->cod_pedido, PDO::PARAM_STR);  
             $consulta->bindValue(':nombre_cliente', $this->nombre_cliente, PDO::PARAM_STR); 
-            $consulta->bindValue(':contenido', json_encode($this->contenido), PDO::PARAM_STR);
             $consulta->bindValue(':estado', $this->estado, PDO::PARAM_STR); 
             $consulta->bindValue(':foto', $this->foto, PDO::PARAM_STR);
             $consulta->execute();
